@@ -22,10 +22,7 @@ public class ScoreService {
     private List<ScoreResultDTO> highscores = new ArrayList<>();
     
     public void addScore(ScoreFormDTO score) {
-        this.scores.compute(score.getUserId(), (k, v) -> {
-            return v == null ? score.getPoints() : v + score.getPoints();
-        }
-        );
+        this.scores.compute(score.getUserId(), (k, v) -> v == null ? score.getPoints() : v + score.getPoints());
         //this.init();
         this.dirty = true;
     }
