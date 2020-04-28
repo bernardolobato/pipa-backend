@@ -32,7 +32,7 @@ public class ScoreController {
 
 
     @GetMapping("/{userId}/position")
-    public ResponseEntity<ScoreResultDTO> position(@PathVariable Integer userId) {
+    public ResponseEntity<ScoreResultDTO> position(@PathVariable Long userId) {
         return ResponseEntity.ok(this.service.getPosition(userId));
     }
 

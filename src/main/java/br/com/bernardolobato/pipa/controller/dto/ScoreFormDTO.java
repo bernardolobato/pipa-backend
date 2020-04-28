@@ -15,8 +15,8 @@ public class ScoreFormDTO {
     @NonNull
     @NotNull
     @Min(1)
-    Integer userId;
+    Long userId;
     @Min(0)
     @NotNull
-    Integer points;
+    Long points;
 }

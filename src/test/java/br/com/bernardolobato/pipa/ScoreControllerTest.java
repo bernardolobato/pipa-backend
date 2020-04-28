@@ -63,7 +63,7 @@ public class ScoreControllerTest {
     @Test
 	public void shouldGetEmptyPositionOK() throws Exception {
         when(this.service
-            .getPosition(1))
+            .getPosition(1l))
             .thenReturn(null);
 		this.mockMvc.perform(get("/1/position")).andDo(print()).andExpect(status().isOk())
 				.andExpect(content().string(Matchers.blankString()));

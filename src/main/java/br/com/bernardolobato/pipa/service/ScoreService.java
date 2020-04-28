@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class ScoreService {
-    private Map<Integer, Integer> scores = new ConcurrentHashMap<>();
+    private Map<Long, Long> scores = new ConcurrentHashMap<>();
     List<ScoreFormDTO> sortedIds = new ArrayList<>();
     private boolean dirty;
     private List<ScoreResultDTO> highscores = new ArrayList<>();
-    
+    private final Integer MAX_HIGHSCORE = 20_000;
     public void addScore(ScoreFormDTO score) {
         this.scores.compute(score.getUserId(), (k, v) -> v == null ? score.getPoints() : v + score.getPoints());
         //this.init();
@@ -37,10 +37,10 @@ public class ScoreService {
         }
     }
 
-    public ScoreResultDTO getPosition(Integer userId) {
+    public ScoreResultDTO getPosition(Long userId) {
         this.sort();
         int position = Collections.binarySearch(this.sortedIds, userId, (form, uid)-> {
-                return ((ScoreFormDTO)form).getUserId().compareTo((Integer)uid) ;
+                return ((ScoreFormDTO)form).getUserId().compareTo((Long)uid) ;
             }
         );
         //int position = this.sortedIds.indexOf(userId);
@@ -58,13 +58,13 @@ public class ScoreService {
         if (dirty) {
             ListIterator<ScoreFormDTO> i = null;
             if (this.sortedIds.size() > 20_000) {
-                i = this.sortedIds.subList(0, 20_000).listIterator();
+                i = this.sortedIds.subList(0, MAX_HIGHSCORE).listIterator();
             } else {
                 i = this.sortedIds.listIterator();
             }
             highscores = new ArrayList<>();
             while(i.hasNext()) {
-                Integer index = i.nextIndex();
+                int index = i.nextIndex();
                 ScoreFormDTO value = i.next();
                 highscores.add(new ScoreResultDTO(value.getUserId(), value.getPoints(), index));
             }   

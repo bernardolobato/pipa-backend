@@ -24,23 +24,23 @@ public class ScoreServiceTest {
     
     @Test
     public void shouldInsertOnPosition0() {
-        ScoreFormDTO dto = new ScoreFormDTO(1,1);
+        ScoreFormDTO dto = new ScoreFormDTO(1l,1l);
         this.scoreService.addScore(dto);
-        ScoreResultDTO result = this.scoreService.getPosition(1);
+        ScoreResultDTO result = this.scoreService.getPosition(1l);
         assertEquals(0, result.getPosition());
     }
 
     @Test
     public void shouldReturnNullWhenNoScoreIsPosted() {
-        ScoreResultDTO result = this.scoreService.getPosition(1);
+        ScoreResultDTO result = this.scoreService.getPosition(1l);
         assertNull(result);
     }
 
     @Test
     public void shouldReturnNullWhenNoUserScoreIsPosted() {
-        ScoreFormDTO dto = new ScoreFormDTO(1, 1);
+        ScoreFormDTO dto = new ScoreFormDTO(1l, 1l);
         this.scoreService.addScore(dto);
-        ScoreResultDTO result = this.scoreService.getPosition(2);
+        ScoreResultDTO result = this.scoreService.getPosition(2l);
         assertEquals(null, result);
     }
 
@@ -52,7 +52,7 @@ public class ScoreServiceTest {
 
     @Test
     public void shouldReturnOneElementListWhenUserScoreIsPosted() {
-        ScoreFormDTO dto = new ScoreFormDTO(1, 1);
+        ScoreFormDTO dto = new ScoreFormDTO(1l, 1l);
         this.scoreService.addScore(dto);
 
         List<ScoreResultDTO> result = this.scoreService.getHighScoreList();
@@ -61,13 +61,13 @@ public class ScoreServiceTest {
 
     @Test
     public void shouldReturnOrderedElementListWhenUserScoreIsPosted() {
-        ScoreFormDTO dto = new ScoreFormDTO(1, 11);
+        ScoreFormDTO dto = new ScoreFormDTO(1l, 11l);
         this.scoreService.addScore(dto);
-        ScoreFormDTO dto2 = new ScoreFormDTO(2, 10);
+        ScoreFormDTO dto2 = new ScoreFormDTO(2l, 10l);
         this.scoreService.addScore(dto2);
-        ScoreFormDTO dto3 = new ScoreFormDTO(3, 5);
+        ScoreFormDTO dto3 = new ScoreFormDTO(3l, 5l);
         this.scoreService.addScore(dto3);
-        ScoreFormDTO dto4 = new ScoreFormDTO(4, 100);
+        ScoreFormDTO dto4 = new ScoreFormDTO(4l, 100l);
         this.scoreService.addScore(dto4);
 
         List<ScoreResultDTO> result = this.scoreService.getHighScoreList();

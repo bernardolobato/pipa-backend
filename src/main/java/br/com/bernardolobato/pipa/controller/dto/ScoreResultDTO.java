@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ScoreResultDTO {
     @NonNull
-    Integer userId;
-    Integer score;
+    Long userId;
+    Long score;
     Integer position;
 }
