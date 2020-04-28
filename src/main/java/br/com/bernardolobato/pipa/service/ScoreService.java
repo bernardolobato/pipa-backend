@@ -3,7 +3,6 @@ package br.com.bernardolobato.pipa.service;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,8 @@ public class ScoreService {
     private Map<Integer, Integer> scores = new ConcurrentHashMap<>();
     List<ScoreFormDTO> sortedIds = new ArrayList<>();
     private boolean dirty;
-
+    private List<ScoreResultDTO> highscores = new ArrayList<>();
+    
     public void addScore(ScoreFormDTO score) {
         this.scores.compute(score.getUserId(), (k, v) -> {
             return v == null ? score.getPoints() : v + score.getPoints();
@@ -37,7 +37,6 @@ public class ScoreService {
             //.map(Map.Entry::getKey)
             .map((el)-> new ScoreFormDTO(el.getKey(), el.getValue()))
             .collect(Collectors.toList());
-            this.dirty = false;
         }
     }
 
@@ -49,36 +48,39 @@ public class ScoreService {
         );
         //int position = this.sortedIds.indexOf(userId);
         //Integer score = this.scores.get(userId);
-        if (position == -1) {
+        if (position < 0) {
             return null;
         }
         ScoreFormDTO score = this.sortedIds.get(position);
-        return new ScoreResultDTO(score.getUserId(), score.getPoints(), position+1);
+        this.dirty = false;
+        return new ScoreResultDTO(score.getUserId(), score.getPoints(), position);
     }
 
     public List<ScoreResultDTO> getHighScoreList() {
         this.sort();
-        ListIterator<ScoreFormDTO> i = null;
-        if (this.sortedIds.size() > 20_000) {
-            i = this.sortedIds.subList(0, 20_000).listIterator();
-        } else {
-            i = this.sortedIds.listIterator();
+        if (dirty) {
+            ListIterator<ScoreFormDTO> i = null;
+            if (this.sortedIds.size() > 20_000) {
+                i = this.sortedIds.subList(0, 20_000).listIterator();
+            } else {
+                i = this.sortedIds.listIterator();
+            }
+            highscores = new ArrayList<>();
+            while(i.hasNext()) {
+                Integer index = i.nextIndex();
+                ScoreFormDTO value = i.next();
+                highscores.add(new ScoreResultDTO(value.getUserId(), value.getPoints(), index));
+            }   
         }
-        List<ScoreResultDTO> result = new ArrayList<>();
-        while(i.hasNext()) {
-            Integer index = i.nextIndex();
-            ScoreFormDTO value = i.next();
-            result.add(new ScoreResultDTO(value.getUserId(), value.getPoints(), index));
-        }   
-        return result;
+        this.dirty = false;
+        return highscores;
     }
 
-    private void init() {
-        int i = 0;
-        while(i<=20_000) {
-            this.scores.put(new Random().nextInt(20_000), new Random().nextInt(20_000));
-            i++;
-        }
-        
-    }
+    // private void init() {
+    //     int i = 0;
+    //     while(i<=20_000) {
+    //         this.scores.put(new Random().nextInt(20_000), new Random().nextInt(20_000));
+    //         i++;
+    //     }        
+    // }
 }
